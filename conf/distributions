@@ -17,7 +17,7 @@ Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
 # GNUPGHOME
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 # EA6DC64FF1115E4D
 # Uploaders
 
@@ -31,7 +31,7 @@ Architectures: amd64 i386 source armhf
 Origin: maruska
 Version: 20.3
 Description: Ubuntu Precise
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 
 
 Codename: quantal
@@ -42,7 +42,7 @@ Architectures: amd64 i386 source armhf
 Origin: maruska
 Version: 20.3
 Description: Ubuntu quantal (11.10)
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 
 
 Codename: sid
@@ -52,7 +52,7 @@ Architectures: amd64 i386 source armhf x32
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
 Update: e6440
 
@@ -66,7 +66,7 @@ Architectures: amd64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Ubuntu focal
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
 #
 #DebOverride: override
@@ -83,7 +83,7 @@ Architectures: i386 amd64 x32
 Label: reprepro
 Origin: maruska
 Version: 5.0
-SignWith: D53CD2B1BB12439D373C66EB78AE221B91A7CD5F
+SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 Description: release for SID, and Gauche C-api version 0.9.4-rc2
 Update: e6440-gauche
 # - debian security
