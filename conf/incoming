@@ -4,7 +4,7 @@
 Name:          mybuilds
 IncomingDir:   incoming
 TempDir:       tmp
-Allow:       release precise quantal unstable gauche-new focal
+Allow:       release unstable gauche-new focal
 Permit:   unused_files
 Cleanup:
 
@@ -12,5 +12,3 @@ Cleanup:
 #Multiple:
 #maverick hopeful
 #Allow  stable>etch ...
-
-
