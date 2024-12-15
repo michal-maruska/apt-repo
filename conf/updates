@@ -19,3 +19,18 @@ VerifyRelease: blindtrust
 Method: http://e6440/~michal/reprepro
 Architectures: amd64 i386 all source
 Components: main
+
+
+Name: localreadd
+Suite: *
+Method: copy:/home/user/reprepro/ok/
+VerifyRelease: 3C09095BAE7F2028
+# 240CC0467639B36D
+# 8F995DDF7EFD36E93C7F2199 3C09095BAE7F2028
+# EA6DC64FF1115E4D
+# fpr:::::::::2F7610B47B14307342CBA978240CC0467639B36D:
+
+# 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+# 2F11BFCBDDD6F2748BF99A6DEA6DC64FF1115E4D
+# Error: not a valid key id '8F995DDF7EFD36E93C7F21993C09095BAE7F2028'!
+# Use hex-igits from the end of the key as identifier

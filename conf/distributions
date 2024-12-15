@@ -6,6 +6,7 @@ Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
 
+
 Codename: release
 Suite: release
 Components: main
@@ -27,7 +28,8 @@ Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
 SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
-Update: e6440
+# Update: e6440
+Update: localreadd
 
 
 # ubuntu: 20.04
