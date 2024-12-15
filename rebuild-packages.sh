@@ -7,3 +7,17 @@
 
 mv dists dists.ok
 
+
+# rm db/packages.db
+# this is a secondary index:
+# rm db/packagenames.db
+reprepro update sid
+
+#
+reprepro dumpunreferenced
+
+# rm db/references.db
+reprepro rereference
+
+# rm db/checksums.db
+reprepro collectnewchecksums
