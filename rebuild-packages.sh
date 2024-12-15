@@ -6,12 +6,21 @@
 # the chunks from the Packages or Sources files, indexed by package name.
 
 set -x
+
+# What's the status of dists? Which one is better?
 mkdir --parents ok
-mv -vf dists ok/dists || : ignore
+if [[ ! -d ok/dists ]]
+then
+    mv -vf dists ok/dists || : ignore
+fi
 
+
+# db: we don't need it:
 mkdir --parents db.backup
-
 mv -v db/packages.db db.backup/ || : ignore
+
+
+# regenerate: from the dists
 rm -fv db/packages.db
 # this is a secondary index:
 # rm db/packagenames.db
@@ -20,10 +29,13 @@ mv -v db/packagenames.db db.backup/ || : ignore
 
 rm -vf db/references.db
 
+# ===========================
 reprepro update sid
-# fixme: others!
+# populates lists/localreadd_sid_*
+reprepro export
+# ===========================
 
-#
+# fixme: others!
 reprepro dumpunreferenced
 
 reprepro rereference
