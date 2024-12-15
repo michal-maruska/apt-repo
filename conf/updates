@@ -23,7 +23,7 @@ Components: main
 
 Name: localreadd
 Suite: *
-Method: copy:/home/user/reprepro/ok/
+Method: copy:/home/michal/reprepro/ok/
 VerifyRelease: 3C09095BAE7F2028
 # 240CC0467639B36D
 # 8F995DDF7EFD36E93C7F2199 3C09095BAE7F2028
