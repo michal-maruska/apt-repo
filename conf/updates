@@ -21,6 +21,12 @@ Architectures: amd64 i386 all source
 Components: main
 
 
+Name: github
+Suite: *
+Method: https://michalmaruska.github.io/
+VerifyRelease: 3C09095BAE7F2028
+
+
 Name: localreadd
 Suite: *
 Method: copy:/home/michal/reprepro/ok/

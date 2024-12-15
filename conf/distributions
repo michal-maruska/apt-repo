@@ -29,8 +29,8 @@ Description: My releases (improved & my own packages) for Sid.
 SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
 # Update: e6440
-Update: localreadd
-
+# Update: localreadd
+Update: github
 
 # ubuntu: 20.04
 Suite: focal
