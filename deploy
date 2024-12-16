@@ -1,0 +1,8 @@
+#!/bin/zsh -feu
+
+# deploy:
+set -x
+
+git push --force-with-lease github main &&
+    gh run list --workflow pages-build-deployment
+
