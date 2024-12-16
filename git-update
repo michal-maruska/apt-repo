@@ -35,3 +35,6 @@ fi
 
 # reprepro dumpunreferenced
 # checkpool
+
+./deploy
+
