@@ -1,0 +1,71 @@
+#!/bin/zsh -feu
+
+# checksums:
+if ! reprepro checkpool;
+then
+    rm -f db/checksums*
+    reprepro collectnewchecksums
+# Warning: readded existing file 'pool/main/a/apt/apt_2.9.17-maruska_amd64.deb' mysteriously missing from the checksum database.
+    reprepro checkpool;
+fi
+
+
+# `Reprepro'
+# --export=(silent-never|never|changed|lookedat|force)
+# --export=changed
+# --endhook hookscript
+# --outhook
+
+# export  -- generate dists/*
+# 
+
+
+
+
+grep-dctrl -P git-daemon-sysvinit dists/sid/main/binary-arm64/Packages
+
+
+# this only looks at db/* files?
+reprepro check
+
+cat <<EOF
+
+newfstatat(AT_FDCWD, "/home/user/reprepro//pool/main/g/git/git-daemon-sysvinit_2.45.2-1-maruska_all.deb", {st_mode=S_IFREG|0664, st_size=1044600, ...}, 0) = 0
+Deleting unexpected file '/home/user/reprepro//pool/main/g/git/git-daemon-sysvinit_2.45.2-1-maruska_all.deb'!
+(not in database and wrong in pool)
+
+ unlinkat(AT_FDCWD, "/home/user/reprepro//pool/main/g/git/git-daemon-sysvinit_2.45.2-1-maruska_all.deb", 0) = 0
+
+Missing file pool/main/g/git/git-daemon-sysvinit_2.45.2-1-maruska_all.deb
+
+Files are missing for 'git-daemon-sysvinit'!
+openat(AT_FDCWD, "/home/user/reprepro//db/version.new", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
+renameat(AT_FDCWD, "/home/user/reprepro//db/version.new", AT_FDCWD, "/home/user/reprepro//db/version") = 0
+unlinkat(AT_FDCWD, "/home/user/reprepro//db/lockfile", 0) = 0
+There have been errors!
+
+EOF
+
+
+
+
+
+# So changes on github remote,
+# how to merge them with local changes?
+
+reprepro checkupdate  sid
+reprepro update sid
+
+reprepro dumpupdate sid
+# predelete
+
+
+reprepro   -C main removefilter sid     'Package (% git-man*)'
+
+reprepro checkupdate sid
+
+
+#
+# File "pool/main/g/git/git-man_2.45.2-1-maruska_all.deb" is already registered with different checksums!
+
+
