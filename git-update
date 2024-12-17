@@ -3,6 +3,7 @@
 # Git merge with a remote, in a way that reprepro DB/ is merged too.
 
 REMOTE=github
+DISTRO=sid
 
 while
     git fetch $REMOTE
@@ -10,8 +11,8 @@ while
     echo "at $sha" >&2
 
     # I need to be sure the update is
-    reprepro dumpupdate sid |grep -v "^keep"
-    # reprepro update
+    reprepro dumpupdate $DISTRO |grep -v "^keep"
+    reprepro update $DISTRO
     # again
     git fetch $REMOTE
     new_sha=$(git rev-parse FETCH_HEAD)
@@ -23,12 +24,15 @@ do :; done
 # now I got both reprepro & git aligned:
 
 head=$(git rev-parse HEAD)
-
 if [[ $sha != $head ]]
    # git status;
 then
-    git merge -s ours $sha
-    git commit -m "update to $REMOTE"
+    git commit -m "reprepro update from $sha"
+
+    git merge --no-commit $sha
+    git reset dist/
+    #  -s ort --strategy-option=ours
+    git commit -m "update & merge to $REMOTE"
 else
     echo "no update detected"
 fi
