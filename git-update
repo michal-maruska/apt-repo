@@ -30,7 +30,7 @@ then
     git commit -m "reprepro update from $sha"
 
     git merge --no-commit $sha
-    git reset dist/
+    git reset dists/
     #  -s ort --strategy-option=ours
     git commit -m "update & merge to $REMOTE"
 else
