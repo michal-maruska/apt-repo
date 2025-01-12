@@ -4,7 +4,7 @@
 Name:          mybuilds
 IncomingDir:   incoming
 TempDir:       tmp
-Allow:       release unstable gauche-new focal
+Allow:       release unstable sid gauche-new focal
 Permit:   unused_files
 Cleanup:
 
