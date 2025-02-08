@@ -8,6 +8,15 @@ REMOTE_BRANCH=github/main
 
 reprepro_managed_dirs=(pool dists)
 
+# this is a sign of trouble!
+if ! gh run list --workflow pages-build-deployment;
+then
+    echo "we must wait for Git propagation to http"
+    exit 1
+fi
+
+reprepro checkupdate sid
+
 # GIT ..... reprepro ....... GIT
 #  v           v           changed?
 #                          This can be just detected by push --`with-lease'
