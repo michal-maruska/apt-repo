@@ -83,7 +83,8 @@ update_once()
             # stage them!
             git add dists/
         else
-            git merge --abort
+            :
+            # git merge --abort
         fi
 
         if ! git diff --staged --exit-code HEAD;
