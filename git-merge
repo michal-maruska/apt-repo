@@ -63,8 +63,15 @@ update_once()
         # git reset   --hard  dists/
 
         # fixme: this must not change anything!
-        git ls-files --unmerged dists/ | cut --fields 2 | sort --unique |\
-            xargs --max-args 1 --no-run-if-empty git checkout HEAD
+        if [[ -n $(git ls-files --unmerged  dists/ ) ]]
+        then
+            cecho red "conflicts detected in these files:"
+            git ls-files --unmerged dists/
+            echo "resetting them"
+
+            git ls-files --unmerged dists/ | cut --fields 2 | sort --unique |\
+                xargs --max-args 1 --no-run-if-empty git checkout HEAD
+        fi
 
         # so
         if ! git diff --staged --stat --exit-code HEAD;
