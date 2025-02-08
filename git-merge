@@ -52,7 +52,7 @@ update_once()
         git merge --no-commit $REMOTE_BRANCH
 
         # don't re-add files which WE added, but 'reprepro removed', but remote added?
-        git status -s pool|sed -n -e 's/^A  //p'| xargs --no-run-if-empty rm -v
+        git status --short pool|sed -n -e 's/^A  //p'| xargs --no-run-if-empty rm -v
 
         # now new (but old) files might appear in pool!!!
         git add pool/
