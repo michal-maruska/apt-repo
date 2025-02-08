@@ -1,5 +1,8 @@
 #!/bin/zsh -feu
 
+source /usr/share/mmc-shell/mmc-functions.sh
+colors
+
 REMOTE=github
 REMOTE_BRANCH=github/main
 
@@ -23,8 +26,10 @@ update_once()
     then
         # if different than HEAD
 
+        info "reprepro update"
         reprepro update sid # requires PGP
 
+        info "commit to git"
         git add $reprepro_managed_dirs
         # if something to commit at all!
         if ! git diff --staged --exit-code HEAD;
@@ -33,14 +38,17 @@ update_once()
         fi
 
 
+        info "try to merge with remote -- ignoring dists/"
         # now merge, all but those $reprepro_managed_dirs
         git merge --no-commit $REMOTE_BRANCH
 
         # don't re-add files which WE added, but 'reprepro removed', but remote added?
-        git status -s pool|sed -n -e 's/^A  //p'| xargs rm -v
+        git status -s pool|sed -n -e 's/^A  //p'| xargs --no-run-if-empty rm -v
 
         # now new (but old) files might appear in pool!!!
         git add pool/
+        # interesting: what files?
+        git diff --staged --stat  -- pool/
 
         # dists ..conflicts
         # git reset   --hard  dists/
