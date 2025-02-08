@@ -74,13 +74,21 @@ update_once()
         fi
 
         # so
-        if ! git diff --staged --stat --exit-code HEAD;
+        # if ! git diff --staged --stat  HEAD;
+        if ! git diff --name-only --cached --exit-code dists/
         then
-            echo "Confirm no files are changed in dists"; read ignored
-            # todo: reprepro export
-            git commit -m 'merge'
+            echo "Some dists changed: so have to re-sign:"; read ignored
+            # but maybe some conflicted files were ignored !
+            reprepro export
+            # stage them!
+            git add dists/
         else
             git merge --abort
+        fi
+
+        if ! git diff --staged --exit-code HEAD;
+        then
+            git commit -m 'merge'
         fi
     fi
 
