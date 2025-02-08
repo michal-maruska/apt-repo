@@ -1,8 +1,21 @@
 #!/bin/zsh -feu
 
 # deploy:
-set -x
+# set -x
 
-git push --force-with-lease github main &&
-    gh run list --workflow pages-build-deployment
+# inly if github/main is our ancestor.
+# otherwise we have to merge: git-merge
 
+REMOTE=github
+branch=main
+
+remote_branch=$REMOTE/$branch
+
+# fixme: we must be on $branch
+if git merge-base --is-ancestor $remote_branch $branch
+then
+    git push --force-with-lease $REMOTE $branch &&
+        gh run list --workflow pages-build-deployment
+else
+    echo "first merge $REMOTE   ./git-merge"
+fi

@@ -1,0 +1,75 @@
+#!/bin/zsh -feu
+
+REMOTE=github
+REMOTE_BRANCH=github/main
+
+reprepro_managed_dirs=(pool dists)
+
+# GIT ..... reprepro ....... GIT
+#  v           v           changed?
+#                          This can be just detected by push --`with-lease'
+# ^-- loop <--------------------
+#
+
+
+# return true if pushed successfully
+update_once()
+{
+    git fetch $REMOTE
+
+    # this is just
+    # git push --force-with-lease $REMOTE main || git fetch $REMOTE
+    if [[ $(git rev-parse FETCH_HEAD) != $(git rev-parse HEAD) ]]
+    then
+        # if different than HEAD
+
+        reprepro update sid # requires PGP
+
+        git add $reprepro_managed_dirs
+        # if something to commit at all!
+        if ! git diff --staged --exit-code HEAD;
+        then
+            git commit -m 'update'
+        fi
+
+
+        # now merge, all but those $reprepro_managed_dirs
+        git merge --no-commit $REMOTE_BRANCH
+
+        # don't re-add files which WE added, but 'reprepro removed', but remote added?
+        git status -s pool|sed -n -e 's/^A  //p'| xargs rm -v
+
+        # now new (but old) files might appear in pool!!!
+        git add pool/
+
+        # dists ..conflicts
+        # git reset   --hard  dists/
+
+        # fixme: this must not change anything!
+        git ls-files -u dists/ | cut -f 2 | sort -u | xargs -n 1 git checkout HEAD
+
+
+        if ! git diff --staged --exit-code HEAD;
+        then
+            echo "Confirm no files are changed in dists"; read ignored
+            # todo: reprepro export
+            git commit -m 'merge'
+        else
+            git merge --abort
+        fi
+    fi
+
+    # don't add ?
+    # not good:
+    # git status -s   dists|sed -n -e 's/^M  //p'| xargs git rm --cached
+
+    #git reset --mixed -- dists
+    #git reset --mixed -- pool
+
+    git push --force-with-lease $REMOTE main
+
+    # remove empty directories, lagging files??
+    git clean -f pool
+}
+
+while ! update_once; do :; done
