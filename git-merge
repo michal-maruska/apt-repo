@@ -63,10 +63,11 @@ update_once()
         # git reset   --hard  dists/
 
         # fixme: this must not change anything!
-        git ls-files -u dists/ | cut -f 2 | sort -u | xargs -n 1 git checkout HEAD
+        git ls-files --unmerged dists/ | cut --fields 2 | sort --unique |\
+            xargs --max-args 1 --no-run-if-empty git checkout HEAD
 
-
-        if ! git diff --staged --exit-code HEAD;
+        # so
+        if ! git diff --staged --stat --exit-code HEAD;
         then
             echo "Confirm no files are changed in dists"; read ignored
             # todo: reprepro export
