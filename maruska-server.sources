@@ -1,0 +1,5 @@
+Types: deb
+URIs: https://michalmaruska.github.io/
+Suites: sid
+Components: main
+Signed-By: /etc/apt/trusted.gpg.d/maruska.gpg
