@@ -1,6 +1,6 @@
 #!/bin/zsh -feu
 
-# deploy:
+# deploy/upload to github (the current branch)
 # set -x
 
 # inly if github/main is our ancestor.
@@ -16,6 +16,11 @@ if git merge-base --is-ancestor $remote_branch $branch
 then
     git push --force-with-lease $REMOTE $branch &&
         gh run list --workflow pages-build-deployment
+    # this can do nothing, will it print it?
 else
-    echo "first merge $REMOTE   ./git-merge"
+    {
+        echo "** Cannot upload, we are not descendant"
+        echo "first merge $REMOTE   ./git-merge"
+    } >&2
+    exit 1
 fi

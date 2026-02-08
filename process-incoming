@@ -14,8 +14,8 @@ fi
 export REPREPRO_BASE_DIR=/home/michal/reprepro/
 
 
-# if you need to remove, 
-# just   reprepro remove precise name 
+# if you need to remove,
+# just   reprepro remove precise name
 reprepro -v  -b /home/michal/reprepro --ignore=surprisingbinary --waitforlock 100 processincoming mybuilds
 
 reprepro export

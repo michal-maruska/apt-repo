@@ -93,10 +93,6 @@ git_merge_limited()
     fi
 }
 
-
-
-
-
 # return true if pushed successfully
 update_once()
 {
@@ -118,7 +114,6 @@ update_once()
         then
             git commit -m 'update'
         fi
-
 
         info "try to merge with remote -- ignoring dists/"
         git_merge_limited
