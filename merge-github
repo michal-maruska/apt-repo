@@ -2,11 +2,23 @@
 
 # checksums:
 if ! reprepro checkpool;
+   # Missing file ....old versions?
+   # ... how to prune these files (from binary indices?)?
+   #
+   # There were files with only some of the checksums this version of reprepro
+   # can compute recorded. To add those run reprepro collectnewchecksums.
 then
+    # db5.3_dump -p db/checksums.db  |grep apt-doc
+    # so indeed the `missing' files are there:
     rm -f db/checksums*
     reprepro collectnewchecksums
 # Warning: readded existing file 'pool/main/a/apt/apt_2.9.17-maruska_amd64.deb' mysteriously missing from the checksum database.
     reprepro checkpool;
+    # but I still have apt-doc ... previous and just-built versions in pool/ but not in the checksums.db
+    # why?
+    # grep-dctrl -P apt-doc dists/sid/main/binary-arm64/Packages
+    # shows the previous
+    # ... so?
 fi
 
 
@@ -17,9 +29,6 @@ fi
 # --outhook
 
 # export  -- generate dists/*
-# 
-
-
 
 
 grep-dctrl -P git-daemon-sysvinit dists/sid/main/binary-arm64/Packages
@@ -27,6 +36,8 @@ grep-dctrl -P git-daemon-sysvinit dists/sid/main/binary-arm64/Packages
 
 # this only looks at db/* files?
 reprepro check
+# Warning: readded existing file 'pool/main/a/apt/apt-doc_3.1.15-maruska_all.deb' mysteriously missing from the checksum database.
+#
 
 cat <<EOF
 
@@ -54,6 +65,8 @@ EOF
 # how to merge them with local changes?
 
 reprepro checkupdate  sid
+# complains about key....
+
 reprepro update sid
 
 reprepro dumpupdate sid
