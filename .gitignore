@@ -1,8 +1,17 @@
-# /pool
+# -*-sh-*-# /pool
+
+# stagins
 /incoming
-# /dists
-/db
-/old
-/dists/UNRELEASED
+# This is cache from remote
 /lists
 
+
+# This is the binary index
+/db
+# which is equivalent to ... dists/*/InRelease  ?
+
+#
+# /old
+
+# This distro is not intended for distribution:
+/dists/UNRELEASED
