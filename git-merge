@@ -1,5 +1,19 @@
 #!/bin/zsh -feu
 
+# 2026: the best tool I could devise
+# but ./git-update seems to do roughly same idea.
+
+# Given remote git & reprepro ....
+# create local git commit, which combines the local & the remote.
+
+# tools available:
+# `git-merge' is not possible, because ....
+# - Packages files need conflict resolution
+# - binary indices need rebuilding while changing the local files...
+
+# so .... `reprepro-update' needs to be used. and that will do the `merge'
+#
+
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
 
@@ -8,14 +22,23 @@ REMOTE_BRANCH=github/main
 
 reprepro_managed_dirs=(pool dists)
 
-# this is a sign of trouble!
-if ! gh run list --workflow pages-build-deployment;
-then
-    echo "we must wait for Git propagation to http"
-    exit 1
-fi
+function exit_if_remote_not_ready()
+{
+    # this is a sign of trouble!
+    if ! gh run list --workflow pages-build-deployment;
+    then
+        echo "we must wait for Git propagation to http" >&2
+        exit 1
+    fi
+}
 
+
+exit_if_remote_not_ready
+
+echo "==========================================="
+echo "Just for information"
 reprepro checkupdate sid
+echo "==========================================="
 
 # GIT ..... reprepro ....... GIT
 #  v           v           changed?

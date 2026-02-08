@@ -5,32 +5,52 @@
 REMOTE=github
 DISTRO=sid
 
-while
-    git fetch $REMOTE
-    sha=$(git rev-parse FETCH_HEAD)
-    echo "at $sha" >&2
+#
+function reprepro_update_at_remote_commit()
+{
+    local new_sha
+    # `global' sha
 
-    # I need to be sure the update is
-    reprepro dumpupdate $DISTRO |grep -v "^keep"
-    reprepro update $DISTRO
-    # again
-    git fetch $REMOTE
-    new_sha=$(git rev-parse FETCH_HEAD)
-    echo "at $new_sha" >&2
-    # if different, repeat!
-    [[ $sha != $new_sha ]]
-do :; done
+    # Find reprepro state & remote git commit, which correspond.
+    # The remote might be doing publishing.... so
+    while
+        git fetch $REMOTE
+        # global variable:
+        sha=$(git rev-parse FETCH_HEAD)
+        echo "at $sha" >&2
+
+        # I need to be sure the update is
+        reprepro dumpupdate $DISTRO |grep -v "^keep"
+        reprepro update $DISTRO
+        # again
+        git fetch $REMOTE
+        new_sha=$(git rev-parse FETCH_HEAD)
+        echo "at $new_sha" >&2
+        # if different, repeat!
+        [[ $sha != $new_sha ]]
+    do :; done
+    # echo $sha
+}
+
+sha=xxx
+reprepro_update_at_remote_commit
 
 # now I got both reprepro & git aligned:
-
 head=$(git rev-parse HEAD)
 if [[ $sha != $head ]]
    # git status;
 then
     git commit -m "reprepro update from $sha"
 
+    #
     git merge --no-commit $sha
+    # reset the conflicts:
+    # return to what we had:
     git reset dists/
+    # pool/  .... it seems it can still have some issue. But why?
+    # mmc: Because they are not accessible by the  apt/reprepro update
+    # protocol but are still inside the git repository.
+
     #  -s ort --strategy-option=ours
     git commit -m "update & merge to $REMOTE"
 else
