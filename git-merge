@@ -57,6 +57,7 @@ git_merge_limited()
     then
         echo "remote has older version:"
         git status --short pool|sed -n -e 's/^A  //p'
+        echo "PRESS KEY"
         read _
         git status --short pool|sed -n -e 's/^A  //p'| xargs --no-run-if-empty rm -v
     fi
@@ -69,7 +70,7 @@ git_merge_limited()
     if git status --short pool|sed -n -e 's/^M  //p' | xargs --no-run-if-empty rm -v
        git diff  --stat  -- pool/
     then
-        echo "reprepro resolved the difference using its algorithm. We cannot handle updates"
+        echo "reprepro resolved the difference using its algorithm. We cannot handle updates. PRESS KEY"
         read _
         # reset:
         # xargs --max-args 1 --no-run-if-empty git checkout HEAD
@@ -99,7 +100,7 @@ git_merge_limited()
     # if ! git diff --staged --stat  HEAD;
     if ! git diff --name-only --cached --exit-code dists/
     then
-        echo "Some dists changed: so have to re-sign:"; read ignored
+        echo "Some dists changed: so have to re-sign: PRESS KEY"; read ignored
         # but maybe some conflicted files were ignored !
         reprepro export
         # stage them!
