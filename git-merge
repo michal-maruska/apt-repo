@@ -36,7 +36,7 @@ function exit_if_remote_not_ready()
 exit_if_remote_not_ready
 
 echo "==========================================="
-echo "Just for information"
+cecho red "reprepro: Just for information"
 reprepro checkupdate sid
 echo "==========================================="
 
@@ -102,6 +102,7 @@ git_merge_limited()
     then
         echo "Some dists changed: so have to re-sign: PRESS KEY"; read ignored
         # but maybe some conflicted files were ignored !
+        cecho red "reprepro export"
         reprepro export
         # stage them!
         git add dists/
@@ -120,6 +121,7 @@ git_merge_limited()
 # return true if pushed successfully
 update_once()
 {
+    cecho blue "git: fetch"
     git fetch $REMOTE
 
     # this is just
@@ -128,10 +130,10 @@ update_once()
     then
         # if different than HEAD
 
-        info "reprepro update"
+        cecho red "reprepro update"
         reprepro update sid # requires PGP
 
-        info "commit to git"
+        cecho blue "commit to git ...."
         git add $reprepro_managed_dirs
         # if something to commit at all!
         if ! git diff --staged --exit-code HEAD;
