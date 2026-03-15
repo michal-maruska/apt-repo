@@ -36,13 +36,14 @@ Update: github
 Suite: focal
 Codename: focal
 Components: main
-DDebComponents: main
 Architectures: amd64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Ubuntu focal
 SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
+
+# DDebComponents: main
 #
 #DebOverride: override
 #UDebOverride: override
