@@ -15,7 +15,8 @@ Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
 # GNUPGHOME
-SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+SignWith: 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
+# 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 # EA6DC64FF1115E4D
 # Uploaders
 
@@ -26,7 +27,8 @@ Architectures: amd64 i386 armhf x32 arm64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
-SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+SignWith: 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
+# 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
 # Update: e6440
 # Update: localreadd
