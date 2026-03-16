@@ -4,6 +4,8 @@ This is used on top of Debian-Sid.
 Some packages are just patched, some are original code.
 The patched ones have a version containing "maruska".
 
+Here the [published repository](https://michalmaruska.github.io/)
+
 Sources can be found on my other [github repositories](https://github.com/MichalMaruska?tab=repositories).
 
 
