@@ -15,10 +15,9 @@ Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
 # GNUPGHOME
-SignWith: 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
+SignWith: mmaruska+debs@gmail.com
+# 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
 # 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
-# EA6DC64FF1115E4D
-# Uploaders
 
 Codename: sid
 Suite: unstable
@@ -27,11 +26,10 @@ Architectures: amd64 i386 armhf x32 arm64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
-SignWith: 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
+SignWith: mmaruska+debs@gmail.com
+# 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
 # 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
-# Update: e6440
-# Update: localreadd
 Update: github
 
 # ubuntu: 20.04
@@ -42,7 +40,8 @@ Architectures: amd64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Ubuntu focal
-SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+SignWith: mmaruska+debs@gmail.com
+# 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 UDebComponents: main
 
 # DDebComponents: main
@@ -61,7 +60,8 @@ Architectures: i386 amd64 x32
 Label: reprepro
 Origin: maruska
 Version: 5.0
-SignWith: 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+SignWith: mmaruska+debs@gmail.com
+# 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
 Description: release for SID, and Gauche C-api version 0.9.4-rc2
 Update: e6440-gauche
 # - debian security
