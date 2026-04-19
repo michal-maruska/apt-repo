@@ -60,11 +60,10 @@ jobs:
       - name: Sanitize Reprepro
         run: |
           ldd $(which reprepro) |grep libdb
-          # If the DB exists but reprepro fails to even check its version,
-          # it's likely a BDB version mismatch.
-          if ! reprepro -b ./apt-data dumpversion; then
-          echo "Database version mismatch detected. Clearing old DB..."
-          rm -rf ./apt-data/db
+          # Try to list references. If it fails (non-zero exit code), the DB is incompatible.
+          if ! reprepro -b ./apt-data --confdir ./main-source/conf dumpreferences > /dev/null 2>&1; then
+              echo "Database incompatible or corrupt. Rebuilding..."
+              rm -rf ./apt-data/db
           fi
 
       - name: Run Reprepro
