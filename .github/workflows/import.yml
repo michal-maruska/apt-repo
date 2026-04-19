@@ -110,7 +110,19 @@ jobs:
         with:
           path: './apt-data' # Now contains dists, pool, public.key, and .nojekyll
 
-      # 4. Deploy the artifact to the web
+
+  deploy: # This is your deployment job name
+    needs: reprepro
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      # url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest # or debian:sid if you are using that
+    steps:
+      # ... your previous steps (upload, etc) ...
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
 
