@@ -11,7 +11,23 @@ jobs:
       - name: Install Tools
         run: |
           apt-get update
+          # really curl?
           apt-get install -y reprepro git curl
+
+          # 1. Create directory for the key
+          mkdir -p -m 755 /etc/apt/keyrings
+
+          # 2. Download the GitHub CLI signing key
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /etc/apt/keyrings/githubcli-archive-keyring.gpg
+          chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+
+          # 3. Add the repository to your sources
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+          # 4. Install the gh tool
+          apt-get update
+          apt-get install -y gh
+
 
       - name: Checkout Config (Main)
         uses: actions/checkout@v4
