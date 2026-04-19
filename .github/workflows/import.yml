@@ -1,0 +1,57 @@
+name: Update Apt Repo
+on:
+  repository_dispatch:
+    types: [new-deb-package]
+
+jobs:
+  reprepro:
+    runs-on: ubuntu-latest
+    container: debian:sid
+    steps:
+      - name: Install Tools
+        run: |
+          apt-get update
+          apt-get install -y reprepro git curl
+
+      - name: Checkout Config (Main)
+        uses: actions/checkout@v4
+        with:
+          path: main-source
+
+      - name: Checkout Data (GH-Pages)
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: apt-data
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Download New Package
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          mkdir -p incoming
+          # Use the payload sent from your slave repo
+          # Force gh to tell us what it's doing
+          gh release download ${{ github.event.client_payload.version }} \
+               --repo ${{ github.event.client_payload.repository }} \
+               --dir ./incoming \
+               --skip-existing
+
+      - name: Run Reprepro
+        run: |
+          # Use config from main, but write data to apt-data folder
+          reprepro -b ./apt-data \
+                   --confdir ./main-source/conf \
+                   include sid ./incoming/*.changes
+
+      - name: Push to GH-Pages
+        working-directory: ./apt-data
+        run: |
+          git config --global user.name "Apt Robot"
+          git config --global user.email "robot@example.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE/apt-data"
+
+          # Add the new pool files, dists metadata, and the updated DB
+          git add .
+          git commit -m "Add ${{ github.event.client_payload.repo }} version ${{ github.event.client_payload.version }}"
+          git push origin gh-pages
