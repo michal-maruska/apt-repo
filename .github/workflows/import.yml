@@ -115,7 +115,7 @@ jobs:
       - name: Prepare apt-data for deployment
         run: |
           # Copy the public key into the root of the repo
-          cp maruska.asc ./apt-data/
+          cp main-source/maruska.asc ./apt-data/
 
           # Create the .nojekyll file inside apt-data
           touch ./apt-data/.nojekyll
