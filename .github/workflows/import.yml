@@ -72,7 +72,7 @@ jobs:
           # Use config from main, but write data to apt-data folder
           reprepro -b ./apt-data \
                    --confdir ./main-source/conf \
-                   includedeb sid ./incoming/*.deb
+                   include sid ./incoming/*.changes
 
       - name: Push to GH-Pages
         working-directory: ./apt-data
