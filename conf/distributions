@@ -22,7 +22,7 @@ SignWith: mmaruska+debs@gmail.com
 Codename: sid
 Suite: unstable
 Components: main
-Architectures: amd64 i386 armhf x32 arm64
+Architectures: amd64 i386 source armhf x32 arm64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
