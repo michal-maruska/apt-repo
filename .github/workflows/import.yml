@@ -6,12 +6,11 @@ on:
 jobs:
   reprepro:
     runs-on: ubuntu-latest
-    container: debian:sid
     steps:
       - name: Install Tools
         run: |
-          apt-get update
-          apt-get install -y reprepro git curl
+          sudo apt-get update
+          sudo apt-get install -y reprepro git
 
       - name: Checkout Config (Main)
         uses: actions/checkout@v4
