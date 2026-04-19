@@ -36,6 +36,15 @@ jobs:
                --dir ./incoming \
                --skip-existing
 
+      - name: Sanitize Reprepro
+        run: |
+          ldd $(which reprepro) |grep libdb
+          # Try to list references. If it fails (non-zero exit code), the DB is incompatible.
+          if ! reprepro -b ./apt-data --confdir ./main-source/conf dumpreferences > /dev/null 2>&1; then
+              echo "Database incompatible or corrupt. Rebuilding..."
+              rm -rf ./apt-data/db
+          fi
+
       - name: Run Reprepro
         run: |
           # Use config from main, but write data to apt-data folder
