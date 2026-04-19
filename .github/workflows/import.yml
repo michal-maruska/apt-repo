@@ -51,6 +51,7 @@ jobs:
                               --pattern "*.deb" \
                               --dir ./incoming
           # mmc: changes, .dsc
+          ls -l incoming
 
       - name: Run Reprepro
         run: |
