@@ -1,0 +1,11 @@
+# Tells reprepro to look in the current working directory for its folders
+basedir .
+
+# Makes the GitHub Action logs actually useful
+verbose
+
+# Stops reprepro from hanging if it hits a signature issue
+ask-passphrase
+
+# Handles the multi-arch 'Architecture: all' clash automatically
+ignore all-already-exists
