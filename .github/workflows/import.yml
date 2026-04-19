@@ -47,9 +47,13 @@ jobs:
         run: |
           mkdir -p incoming
           # Use the payload sent from your slave repo
-          gh release download --repo ${{ github.event.client_payload.repo }} \
-                              --pattern "*.deb" \
-                              --dir ./incoming
+          # Force gh to tell us what it's doing
+          # --pattern "*.deb" \
+          gh release download ${{ github.event.client_payload.version }} \
+               --repo ${{ github.event.client_payload.repo }} \
+               --dir ./incoming \
+               --skip-existing
+
           # mmc: changes, .dsc
           ls -l incoming
 
