@@ -8,4 +8,8 @@ verbose
 ask-passphrase
 
 # Handles the multi-arch 'Architecture: all' clash automatically
-ignore all-already-exists
+# for now .... Unknown --ignore value: 'all-already-exists'!
+# ignore all-already-exists
+# ignoreall-already-exists
+# unknown option 'ignoreall-already-exists'!
+
