@@ -116,6 +116,7 @@ jobs:
         run: |
           # Copy the public key into the root of the repo
           cp main-source/maruska.asc ./apt-data/
+          ls -l ./apt-data/
 
           # Create the .nojekyll file inside apt-data
           touch ./apt-data/.nojekyll
