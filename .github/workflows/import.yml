@@ -117,15 +117,16 @@ jobs:
           # Copy the public key into the root of the repo
           cp main-source/maruska.asc ./apt-data/
           cp main-source/maruska.asc ./apt-data/maruska.asc.txt
-          ls -l ./apt-data/
+          cp main-source/maruska.asc ./apt-data/maruska.txt
           echo "Debian repository" > ./apt-data/index.html
 
-          # Create the .nojekyll file inside apt-data
+          # prevent GH from processing the files:
           touch ./apt-data/.nojekyll
 
           # CRITICAL: Remove the db folder so it isn't included in the Artifact
           # This only removes it from the local runner disk, not the git history
           rm -rf ./apt-data/db
+          ls -l ./apt-data/
 
       # 3. Upload exactly what is left in apt-data
       - name: Upload Pages Artifact
