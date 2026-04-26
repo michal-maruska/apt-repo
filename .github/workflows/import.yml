@@ -116,7 +116,9 @@ jobs:
         run: |
           # Copy the public key into the root of the repo
           cp main-source/maruska.asc ./apt-data/
+          cp main-source/maruska.asc ./apt-data/maruska.asc.txt
           ls -l ./apt-data/
+          echo "Debian repository" > ./apt-data/index.html
 
           # Create the .nojekyll file inside apt-data
           touch ./apt-data/.nojekyll
