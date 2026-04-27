@@ -39,10 +39,10 @@ jobs:
         with:
           path: main-source
 
-      - name: Checkout Data (GH-Pages)
+      - name: Checkout Data (apt-storage)
         uses: actions/checkout@v4
         with:
-          ref: gh-pages
+          ref: apt-storage
           path: apt-data
           token: ${{ secrets.PAT_TOKEN }}
 
@@ -100,7 +100,7 @@ jobs:
                    --confdir ./main-source/conf \
                    include sid ./incoming/*.changes
 
-      - name: Push to GH-Pages
+      - name: Push to apt-storage
         working-directory: ./apt-data
         run: |
           git config --global user.name "Apt Robot"
@@ -110,7 +110,7 @@ jobs:
           # Add the new pool files, dists metadata, and the updated DB
           git add .
           git commit -m "Add ${{ github.event.client_payload.repo }} version ${{ github.event.client_payload.version }}"
-          git push origin gh-pages
+          git push origin apt-storage
 
       - name: Prepare apt-data for deployment
         run: |
@@ -126,12 +126,13 @@ jobs:
           # CRITICAL: Remove the db folder so it isn't included in the Artifact
           # This only removes it from the local runner disk, not the git history
           rm -rf ./apt-data/db
-          ls -l ./apt-data/
+          ls -la ./apt-data/
 
       # 3. Upload exactly what is left in apt-data
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # should ignore .git !
           path: './apt-data' # Now contains dists, pool, public.key, and .nojekyll
 
 
@@ -142,7 +143,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      # url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest # or debian:sid if you are using that
     steps:
       # ... your previous steps (upload, etc) ...
