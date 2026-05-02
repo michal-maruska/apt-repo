@@ -14,6 +14,10 @@ permissions:
   pages: write      # Needed to upload the web artifact
   id-token: write   # Needed for the secure deployment handshake
 
+concurrency:
+  group: apt-repository
+  cancel-in-progress: false
+
 jobs:
   reprepro:
     runs-on: ubuntu-latest
