@@ -1,0 +1,28 @@
+name: Migrate from apt-storage branch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout apt-storage branch
+        uses: actions/checkout@v4
+        with:
+          ref: apt-storage
+          path: apt-data
+
+      - name: Create release from branch contents
+        run: |
+          tar czf reprepro-state.tar.gz apt-data/
+          gh release delete reprepro-state --yes || true
+          gh release create reprepro-state reprepro-state.tar.gz \
+          --title "reprepro state" \
+          --notes "Migrated from apt-storage branch" \
+          --prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
