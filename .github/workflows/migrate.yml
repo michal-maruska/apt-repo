@@ -30,7 +30,9 @@ jobs:
         run: |
           # removeolderbinaries unstable package-name 1
           reprepro -b ./apt-data --confdir ./main-source/conf \
-             clearvanished
+             --delete clearvanished
+          # Do not forget to remove all exported package indices manually.
+
           reprepro -b ./apt-data --confdir ./main-source/conf \
              deleteunreferenced
           du -sh apt-data/pool/*/* | sort -h
