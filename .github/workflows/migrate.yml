@@ -21,6 +21,7 @@ jobs:
           tar czf reprepro-state.tar.gz apt-data/
           gh release delete reprepro-state --yes || true
           gh release create reprepro-state reprepro-state.tar.gz \
+          --repo ${{ github.repository }} \
           --title "reprepro state" \
           --notes "Migrated from apt-storage branch" \
           --prerelease
