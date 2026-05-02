@@ -119,17 +119,17 @@ jobs:
                    --confdir ./main-source/conf \
                    include sid ./incoming/*.changes
 
-      - name: Push to apt-storage
-        working-directory: ./apt-data
+      - name: Save to release
         run: |
-          git config --global user.name "Apt Robot"
-          git config --global user.email "robot@example.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE/apt-data"
-
-          # Add the new pool files, dists metadata, and the updated DB
-          git add .
-          git commit -m "Add ${{ github.event.client_payload.repo }} version ${{ github.event.client_payload.version }}"
-          git push origin apt-storage
+          tar czf reprepro-state.tar.gz apt-data/{pool,dists,db}
+          gh release delete reprepro-state --yes --repo ${{ github.repository }} || true
+          gh release create reprepro-state reprepro-state.tar.gz \
+            --title "reprepro state" \
+            --notes "Run ${{ github.run_id }}" \
+            --prerelease \
+            --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare apt-data for deployment
         run: |
