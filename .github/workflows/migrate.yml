@@ -28,8 +28,11 @@ jobs:
 
       - name: Clean up -- prune obsolete packages
         run: |
+          # removeolderbinaries unstable package-name 1
           reprepro -b ./apt-data --confdir ./main-source/conf \
-          removeolderbinaries unstable package-name 1
+             deleteunreferenced
+          du -sh apt-data/pool/*/* | sort -h
+
 
       - name: Create release from branch contents
         run: |
