@@ -10,11 +10,26 @@ jobs:
       contents: write
 
     steps:
+      - name: Install Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y reprepro git
+
+      - name: Checkout Config (Main)
+        uses: actions/checkout@v4
+        with:
+          path: main-source
+
       - name: Checkout apt-storage branch
         uses: actions/checkout@v4
         with:
           ref: apt-storage
           path: apt-data
+
+      - name: Clean up -- prune obsolete packages
+        run: |
+          reprepro -b ./apt-data --confdir ./main-source/conf \
+          removeolderbinaries unstable package-name 1
 
       - name: Create release from branch contents
         run: |
