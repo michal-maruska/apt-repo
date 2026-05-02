@@ -32,6 +32,8 @@ jobs:
           reprepro -b ./apt-data --confdir ./main-source/conf \
              deleteunreferenced
           du -sh apt-data/pool/*/* | sort -h
+          du -sh apt-data/pool/main/p/*  | sort -h
+          du -sh apt-data/pool/main/g/*  | sort -h
 
 
       - name: Create release from branch contents
