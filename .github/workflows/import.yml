@@ -42,12 +42,31 @@ jobs:
         with:
           path: main-source
 
-      - name: Checkout Data (apt-storage)
-        uses: actions/checkout@v4
+      - name: Restore cache
+        id: cache
+        if: ${{ !inputs.bootstrap }}
+        uses: actions/cache@v4
         with:
-          ref: apt-storage
-          path: apt-data
-          token: ${{ secrets.PAT_TOKEN }}
+          path: |
+            apt-data/pool
+            apt-data/dists
+            apt-data/db
+          key: reprepro-${{ github.run_id }}
+          restore-keys: |
+                 reprepro-
+
+      - name: Restore from release if cache missed
+        if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        run: |
+          gh release download reprepro-state \
+            --pattern reprepro-state.tar.gz \
+            --repo ${{ github.repository }} || true
+          if [ -f reprepro-state.tar.gz ]; then
+            tar xzf reprepro-state.tar.gz
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Sanitize Reprepro
         run: |
