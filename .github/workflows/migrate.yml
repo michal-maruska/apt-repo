@@ -36,7 +36,7 @@ jobs:
 
       - name: Create release from branch contents
         run: |
-          tar czf reprepro-state.tar.gz apt-data/
+          tar czf reprepro-state.tar.gz --exclude='apt-data/.git'  apt-data/
           gh release delete reprepro-state \
           --repo ${{ github.repository }} --yes || true
           gh release create reprepro-state reprepro-state.tar.gz \
