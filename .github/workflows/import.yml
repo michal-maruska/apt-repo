@@ -31,6 +31,7 @@ concurrency:
 jobs:
   reprepro:
     runs-on: ubuntu-latest
+    # container: debian:sid
     steps:
       - name: Install Tools
         run: |
@@ -67,6 +68,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # not in git anymore:
+      # - name: Checkout Data (apt-storage)
+      #   uses: actions/checkout@v4
+      #   with:
+      #     ref: apt-storage
+      #     path: apt-data
+      #     token: ${{ secrets.PAT_TOKEN }}
 
       - name: Sanitize Reprepro
         run: |
@@ -81,6 +89,8 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
+          # todo: can you run as "builder" ?
+
           # Fix for GPG in containers: avoid "Inappropriate ioctl for device"
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
