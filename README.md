@@ -36,7 +36,8 @@ In that case `apt -o 'APt::Install::Protect-Maruska=false'` will allow it, if ne
 
 ## How it is built:
 
-* there is a **docker** image for building in debian-sid, with access to these packages, as there are dependencies.
+* there is a [**docker** image](https://github.com/michal-maruska/workflows/) for building in debian-sid,
+with access to these packages, as there are dependencies.
 * **component** repositories use a shared GH workflow, to build (using that docker image), and in the end trigger ...
 * this repo has the configuration and a GH workflow to import the GH Release artifacts of other **component** builds
 
