@@ -1,7 +1,7 @@
 Codename: UNRELEASED
 Suite: UNRELEASED
 Components: main
-Architectures: amd64 i386 source x32
+Architectures: amd64 source
 Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
@@ -10,7 +10,7 @@ Description: Development Snapshots from my sources in Git.
 Codename: release
 Suite: release
 Components: main
-Architectures: amd64 i386 source armhf x32 arm64
+Architectures: amd64 source arm64
 Origin: maruska
 Version: 20.3
 Description: Development Snapshots from my sources in Git.
@@ -22,13 +22,14 @@ SignWith: mmaruska+debs@gmail.com
 Codename: sid
 Suite: unstable
 Components: main
-Architectures: amd64 i386 source armhf x32 arm64
+Architectures: amd64 source arm64
 Origin: maruska
 Version: 20.3
 Description: My releases (improved & my own packages) for Sid.
 SignWith: mmaruska+debs@gmail.com
 # 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
 # 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+# Limit: 2
 UDebComponents: main
 Update: github
 
@@ -55,7 +56,7 @@ Codename: gauche-new
 Suite: gauche-0.9.4-rc2
 Components: main
 # uDebComponents: main
-Architectures: i386 amd64 x32
+Architectures: amd64
 #source
 Label: reprepro
 Origin: maruska
