@@ -6,8 +6,18 @@ on:
         description: 'Empty the pool!'
         type: boolean
         default: false
+
   repository_dispatch:
     types: [new-deb-package]
+
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+      && (inputs.bootstrap && 'Bootstrap' || 'Manual run')
+      || format('Import: {0} {1}',
+           github.event.client_payload.component,
+           github.event.client_payload.version) }}
+
 
 permissions:
   contents: write   # Needed to push the DB back to the branch
