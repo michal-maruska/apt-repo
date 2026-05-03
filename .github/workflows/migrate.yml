@@ -35,9 +35,17 @@ jobs:
 
           reprepro -b ./apt-data --confdir ./main-source/conf \
              deleteunreferenced
+
+          # drop 2nd version:
+          reprepro -b ./apt-data --confdir ./main-source/conf \
+          removematched unstable 'git|2.47.1*'
+          reprepro -b ./apt-data --confdir ./main-source/conf \
+          deleteunreferenced
+
           du -sh apt-data/pool/*/* | sort -h
           du -sh apt-data/pool/main/p/*  | sort -h
           du -sh apt-data/pool/main/g/*  | sort -h
+          ls -Sl apt-data/pool/main/g/git/
 
 
       - name: Create release from branch contents
