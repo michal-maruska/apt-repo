@@ -3,6 +3,11 @@ on:
   repository_dispatch:
     types: [new-deb-package]
 
+permissions:
+  contents: write   # Needed to push the DB back to the branch
+  pages: write      # Needed to upload the web artifact
+  id-token: write   # Needed for the secure deployment handshake
+
 jobs:
   reprepro:
     runs-on: ubuntu-latest
@@ -85,3 +90,27 @@ jobs:
           git add .
           git commit -m "Add ${{ github.event.client_payload.repo }} version ${{ github.event.client_payload.version }}"
           git push origin gh-pages
+
+      - name: Prepare apt-data for deployment
+        run: |
+          # Copy the public key into the root of the repo
+          cp main-source/maruska.asc ./apt-data/
+          echo "Debian repository" > ./apt-data/index.html
+
+          # prevent GH from processing the files:
+          touch ./apt-data/.nojekyll
+
+          # CRITICAL: Remove the db folder so it isn't included in the Artifact
+          # This only removes it from the local runner disk, not the git history
+          rm -rf ./apt-data/db
+
+      # 3. Upload exactly what is left in apt-data
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './apt-data' # Now contains dists, pool, public.key, and .nojekyll
+
+      # 4. Deploy the artifact to the web
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
