@@ -29,6 +29,7 @@ Description: My releases (improved & my own packages) for Sid.
 SignWith: mmaruska+debs@gmail.com
 # 40F2D63A95A934FFF1E0D7E35B185553EBCE8090
 # 8F995DDF7EFD36E93C7F21993C09095BAE7F2028
+# Limit: 2
 UDebComponents: main
 Update: github
 
