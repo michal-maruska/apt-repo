@@ -15,7 +15,7 @@ run-name: >-
   ${{ github.event_name == 'workflow_dispatch'
       && (inputs.bootstrap && 'Bootstrap' || 'Manual run')
       || format('Import: {0} {1}',
-           github.event.client_payload.component,
+           github.event.client_payload.repository,
            github.event.client_payload.version) }}
 
 
