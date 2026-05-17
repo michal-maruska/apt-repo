@@ -14,7 +14,7 @@ Sources can be found on my other [github repositories](https://github.com/michal
 
 
 Read https://wiki.debian.org/DebianRepository/UseThirdParty to assess risks.
-Packages are signed by my gpg key, so cannot be tempered with once uploaded on github.
+<!-- Packages are signed with my gpg key, so cannot be tempered with once uploaded on github. -->
 
 Get the public key
 ```shell
