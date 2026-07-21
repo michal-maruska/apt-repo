@@ -125,9 +125,13 @@ jobs:
         if: github.event_name == 'repository_dispatch'
         run: |
           # Use config from main, but write data to apt-data folder
-          reprepro -b ./apt-data \
+          for changes in ./incoming/*.changes
+          do
+             reprepro -b ./apt-data \
                    --confdir ./main-source/conf \
-                   include sid ./incoming/*.changes
+                   include sid $changes
+          done
+
 
       - name: Save to release
         run: |
