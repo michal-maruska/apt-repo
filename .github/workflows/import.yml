@@ -141,7 +141,8 @@ jobs:
               if [ -e "$1" ];
               then
                  for deb in ./incoming/*.deb; do
-                     reprepro -b "$REPO" includedeb sid "$deb"
+                     reprepro -b ./apt-data --confdir ./main-source/conf \
+                     includedeb sid "$deb"
                  done
               else
                  echo "nothing to include"
