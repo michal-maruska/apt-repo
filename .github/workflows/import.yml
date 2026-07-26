@@ -125,12 +125,29 @@ jobs:
         if: github.event_name == 'repository_dispatch'
         run: |
           # Use config from main, but write data to apt-data folder
-          for changes in ./incoming/*.changes
-          do
-             reprepro -b ./apt-data \
+
+          set -- ./incoming/*.changes
+          if [ -e "$1" ]; then
+            for changes in ./incoming/*.changes
+            do
+               reprepro -b ./apt-data \
                    --confdir ./main-source/conf \
                    include sid $changes
-          done
+            done
+          else
+              # if no .changes files,  then just manually includedeb sid *.deb ?
+              echo "no .changes files, checking for bare .debs instead"
+              set -- ./incoming/*.deb
+              if [ -e "$1" ];
+              then
+                 for deb in ./incoming/*.deb; do
+                     reprepro -b "$REPO" includedeb sid "$deb"
+                 done
+              else
+                 echo "nothing to include"
+              exit 1
+              fi
+          fi
 
 
       - name: Save to release
