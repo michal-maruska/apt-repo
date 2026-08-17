@@ -28,6 +28,10 @@ concurrency:
   group: apt-repository
   cancel-in-progress: false
 
+env:
+  RELEASE_TAG: reprepro-state
+  REPO: ${{ github.repository }}
+
 jobs:
   reprepro:
     runs-on: ubuntu-latest
@@ -59,7 +63,7 @@ jobs:
       - name: Restore from release if cache missed
         if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
         run: |
-          gh release download reprepro-state \
+          gh release download "$RELEASE_TAG" \
             --pattern reprepro-state.tar.gz \
             --repo ${{ github.repository }} || true
           if [ -f reprepro-state.tar.gz ]; then
@@ -157,19 +161,19 @@ jobs:
 
           # create the release only if it doesn't already exist
           # todo: reprepro-state should be a variable.
-          gh release view reprepro-state --repo michal-maruska/apt-repo >/dev/null 2>&1 || \
+          gh release view reprepro-state --repo "$REPO" >/dev/null 2>&1 || \
           gh release create reprepro-state \
                --title "reprepro state" \
                --notes "initial" \
                --prerelease \
-               --repo michal-maruska/apt-repo
+               --repo "$REPO"
 
           # upload/overwrite the asset in place — no delete, no gap
-          gh release upload reprepro-state reprepro-state.tar.gz \
+          gh release upload "$RELEASE_TAG" reprepro-state.tar.gz \
                --clobber \
-               --repo michal-maruska/apt-repo
+               --repo $REPO
 
-          gh release edit reprepro-state --notes "Run ${{ github.run_id }}" --repo michal-maruska/apt-repo
+          gh release edit "$RELEASE_TAG" --notes "Run ${{ github.run_id }}" --repo "$REPO"
 
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
