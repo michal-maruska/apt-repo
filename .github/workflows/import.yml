@@ -154,12 +154,23 @@ jobs:
       - name: Save to release
         run: |
           tar czf reprepro-state.tar.gz apt-data/{pool,dists,db}
-          gh release delete reprepro-state --yes --repo ${{ github.repository }} || true
-          gh release create reprepro-state reprepro-state.tar.gz \
-            --title "reprepro state" \
-            --notes "Run ${{ github.run_id }}" \
-            --prerelease \
-            --repo ${{ github.repository }}
+
+          # create the release only if it doesn't already exist
+          # todo: reprepro-state should be a variable.
+          gh release view reprepro-state --repo michal-maruska/apt-repo >/dev/null 2>&1 || \
+          gh release create reprepro-state \
+               --title "reprepro state" \
+               --notes "initial" \
+               --prerelease \
+               --repo michal-maruska/apt-repo
+
+          # upload/overwrite the asset in place — no delete, no gap
+          gh release upload reprepro-state reprepro-state.tar.gz \
+               --clobber \
+               --repo michal-maruska/apt-repo
+
+          gh release edit reprepro-state --notes "Run ${{ github.run_id }}" --repo michal-maruska/apt-repo
+
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
