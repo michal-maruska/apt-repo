@@ -43,14 +43,14 @@ jobs:
           sudo apt-get install -y reprepro git
 
       - name: Checkout Config (Main)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: main-source
 
       - name: Restore cache
         id: cache
         if: ${{ !inputs.bootstrap }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             apt-data/pool
@@ -74,7 +74,7 @@ jobs:
 
       # not in git anymore:
       # - name: Checkout Data (apt-storage)
-      #   uses: actions/checkout@v4
+      #   uses: actions/checkout@v5
       #   with:
       #     ref: apt-storage
       #     path: apt-data
@@ -193,7 +193,7 @@ jobs:
 
       # 3. Upload exactly what is left in apt-data
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           # should ignore .git !
           path: './apt-data' # Now contains dists, pool, public.key, and .nojekyll
