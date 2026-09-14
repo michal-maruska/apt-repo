@@ -61,7 +61,8 @@ jobs:
                  reprepro-
 
       - name: Restore from release if cache missed
-        if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        if: steps.cache.outputs.cache-matched-key == '' && !inputs.bootstrap
+        # if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
         run: |
           gh release download "$RELEASE_TAG" \
             --pattern reprepro-state.tar.gz \
