@@ -57,12 +57,13 @@ jobs:
             apt-data/dists
             apt-data/db
           key: reprepro-${{ github.run_id }}
-          restore-keys: |
-                 reprepro-
+          restore-keys: reprepro-
 
       - name: Restore from release if cache missed
         if: steps.cache.outputs.cache-matched-key == '' && !inputs.bootstrap
         # if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download "$RELEASE_TAG" \
             --pattern reprepro-state.tar.gz \
@@ -70,8 +71,6 @@ jobs:
           if [ -f reprepro-state.tar.gz ]; then
             tar xzf reprepro-state.tar.gz
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # not in git anymore:
       # - name: Checkout Data (apt-storage)
