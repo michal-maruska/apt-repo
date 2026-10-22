@@ -22,6 +22,11 @@ concurrency:
   group: apt-repo          # use the same group in the import/publish workflow
   cancel-in-progress: false
 
+env:
+  RELEASE_TAG: reprepro-state
+  REPO: ${{ github.repository }}
+
+
 jobs:
   cleanup:
     runs-on: ubuntu-latest
@@ -59,7 +64,7 @@ jobs:
         run: |
           gh release download "$RELEASE_TAG" \
             --pattern reprepro-state.tar.gz \
-            --repo ${{ github.repository }} || true
+            --repo $REPO || true
           if [ -f reprepro-state.tar.gz ]; then
             tar xzf reprepro-state.tar.gz
           fi
