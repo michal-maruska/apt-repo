@@ -52,6 +52,29 @@ jobs:
           key: reprepro-${{ github.run_id }}
           restore-keys: |
                  reprepro-
+
+      - name: Restore from release if cache missed
+        if: steps.cache.outputs.cache-matched-key == '' && !inputs.bootstrap
+        # if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        run: |
+          gh release download "$RELEASE_TAG" \
+            --pattern reprepro-state.tar.gz \
+            --repo ${{ github.repository }} || true
+          if [ -f reprepro-state.tar.gz ]; then
+            tar xzf reprepro-state.tar.gz
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sanitize Reprepro
+        run: |
+          ldd $(which reprepro) |grep libdb
+          # Try to list references. If it fails (non-zero exit code), the DB is incompatible.
+          if ! reprepro -b ./apt-data --confdir ./main-source/conf dumpreferences > /dev/null 2>&1; then
+              echo "Database incompatible or corrupt. Rebuilding..."
+              rm -rf ./apt-data/db
+          fi
+
 # now
       # restore repo state exactly as the publish workflow does:
       #   actions/cache restore + release fallback
