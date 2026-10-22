@@ -84,7 +84,9 @@ jobs:
       # restore repo state exactly as the publish workflow does:
       #   actions/cache restore + release fallback
       - name: Show current state
-        run: reprepro list sid
+        run: |
+          reprepro clearvanished
+          reprepro list sid
       - name: Remove dbgsym
         if: ${{ inputs.dbgsym }}
         run: |
