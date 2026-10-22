@@ -26,6 +26,8 @@ env:
   RELEASE_TAG: reprepro-state
   REPO: ${{ github.repository }}
 
+permissions:
+  contents: write      # releases + assets
 
 jobs:
   cleanup:
