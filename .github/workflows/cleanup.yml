@@ -179,3 +179,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Save cache
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            apt-data/pool
+            apt-data/dists
+            apt-data/db
+            key: reprepro-${{ github.run_id }}
