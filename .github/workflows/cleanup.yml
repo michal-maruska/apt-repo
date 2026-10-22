@@ -123,3 +123,27 @@ jobs:
         run: reprepro -b repo deleteunreferenced
 
       # if apply: save state back to cache/release, then republish Pages
+
+      - name: Save to release
+        if: ${{ inputs.apply }}
+        run: |
+          tar czf reprepro-state.tar.gz apt-data/{pool,dists,db}
+
+          # create the release only if it doesn't already exist
+          # todo: reprepro-state should be a variable.
+          gh release view reprepro-state --repo "$REPO" >/dev/null 2>&1 || \
+          gh release create reprepro-state \
+          --title "reprepro state" \
+          --notes "initial" \
+          --prerelease \
+          --repo "$REPO"
+
+          # upload/overwrite the asset in place — no delete, no gap
+          gh release upload "$RELEASE_TAG" reprepro-state.tar.gz \
+          --clobber \
+          --repo $REPO
+
+          gh release edit "$RELEASE_TAG" --notes "Run ${{ github.run_id }}" --repo "$REPO"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
