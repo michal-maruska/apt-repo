@@ -101,7 +101,8 @@ jobs:
       - name: Show current state
         run: |
           reprepro --delete clearvanished
-          reprepro list sid
+          reprepro list sid | sort -t: -k 2
+
       - name: Remove dbgsym
         if: ${{ inputs.dbgsym }}
         run: |
