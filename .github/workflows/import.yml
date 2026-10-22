@@ -154,25 +154,6 @@ jobs:
               exit 1
               fi
           fi
-          # clean: should not be necessary:
-          reprepro -b ./apt-data \
-                   --confdir ./main-source/conf \
-                   dumpunreferenced
-          reprepro -b ./apt-data \
-                   --confdir ./main-source/conf \
-                   deleteunreferenced   # deletes them
-          # in particular:
-          reprepro -b ./apt-data \
-                   --confdir ./main-source/conf \
-                   ls apt-dbgsym
-
-          reprepro -b ./apt-data \
-                   --confdir ./main-source/conf \
-                   -T dsc remove sid apt
-          reprepro -b ./apt-data \
-                   --confdir ./main-source/conf \
-                   deleteunreferenced   # deletes them
-
 
       - name: Save to release
         run: |
