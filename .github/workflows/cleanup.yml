@@ -1,0 +1,82 @@
+name: apt-repo cleanup
+on:
+  workflow_dispatch:
+    inputs:
+      keep:
+        description: Versions to keep per package/arch
+        default: "1"
+      dbgsym:
+        description: Remove all *-dbgsym packages
+        type: boolean
+        default: true
+      sources:
+        description: Remove all source packages
+        type: boolean
+        default: true
+      apply:
+        description: Actually delete (otherwise dry run)
+        type: boolean
+        default: false
+
+concurrency:
+  group: apt-repo          # use the same group in the import/publish workflow
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      REPREPRO_BASE_DIR: ${{ github.workspace }}/apt-data      # state from cache/release
+      REPREPRO_CONFIG_DIR: ${{ github.workspace }}/main-source/conf    # from git
+    steps:
+# exactly copied:
+      - name: Install Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y reprepro git
+
+      - name: Checkout Config (Main)
+        uses: actions/checkout@v5
+        with:
+          path: main-source
+
+      - name: Restore cache
+        id: cache
+        if: ${{ !inputs.bootstrap }}
+        uses: actions/cache@v5
+        with:
+          path: |
+            apt-data/pool
+            apt-data/dists
+            apt-data/db
+          key: reprepro-${{ github.run_id }}
+          restore-keys: |
+                 reprepro-
+# now
+      # restore repo state exactly as the publish workflow does:
+      #   actions/cache restore + release fallback
+      - name: Show current state
+        run: reprepro ls | sort
+      - name: Remove dbgsym
+        if: ${{ inputs.dbgsym }}
+        run: |
+          if [ "${{ inputs.apply }}" = true ]; then
+            reprepro removefilter sid 'Package (% *-dbgsym)'
+          else
+            reprepro listfilter sid 'Package (% *-dbgsym)'
+          fi
+      - name: Remove sources
+        if: ${{ inputs.sources }}
+        run: |
+          if [ "${{ inputs.apply }}" = true ]; then
+            reprepro -T dsc removefilter sid 'Package (% *)'
+          else
+            reprepro -T dsc list sid
+          fi
+      - name: Prune old versions
+        run: python3 prune-apt.py --keep "${{ inputs.keep }}" ${{ inputs.apply && '--apply' || '' }} --conf $REPREPRO_CONFIG_DIR apt-data
+      - name: Delete unreferenced files
+        if: ${{ inputs.apply }}
+        run: reprepro -b repo deleteunreferenced
+
+      # if apply: save state back to cache/release, then republish Pages
