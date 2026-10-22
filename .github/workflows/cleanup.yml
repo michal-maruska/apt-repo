@@ -35,6 +35,12 @@ jobs:
       REPREPRO_CONFIG_DIR: ${{ github.workspace }}/main-source/conf    # from git
     steps:
 # exactly copied:
+      - name: drop failing deb-source repositories
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list \
+          /etc/apt/sources.list.d/azure-cli.* \
+          /etc/apt/sources.list.d/microsoft*.sources
+
       - name: Install Tools
         run: |
           sudo apt-get update
