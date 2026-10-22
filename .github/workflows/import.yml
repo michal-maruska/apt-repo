@@ -164,7 +164,15 @@ jobs:
           # in particular:
           reprepro -b ./apt-data \
                    --confdir ./main-source/conf \
-                   ls apt
+                   ls apt-dbgsym
+
+          reprepro -b ./apt-data \
+                   --confdir ./main-source/conf \
+                   -T dsc remove sid apt
+          reprepro -b ./apt-data \
+                   --confdir ./main-source/conf \
+                   deleteunreferenced   # deletes them
+
 
       - name: Save to release
         run: |
