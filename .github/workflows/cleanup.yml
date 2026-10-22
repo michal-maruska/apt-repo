@@ -42,9 +42,16 @@ jobs:
           /etc/apt/sources.list.d/microsoft*.sources
 
       - name: Install Tools
+        timeout-minutes: 5
         run: |
-          sudo apt-get update
-          sudo apt-get install -y reprepro git
+          APT="-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
+          if ! sudo timeout 120 apt-get update $APT; then
+             echo "Azure mirror failed, falling back to archive.ubuntu.com"
+             sudo sed -i 's|^URIs:.*|URIs: http://archive.ubuntu.com/ubuntu/|' \
+             /etc/apt/sources.list.d/ubuntu.sources
+             sudo timeout 120 apt-get update $APT
+          fi
+          sudo apt-get install -y $APT reprepro
 
       - name: Checkout Config (Main)
         uses: actions/checkout@v5
