@@ -178,26 +178,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare apt-data for deployment
+      - name: Stage site
         run: |
-          # Copy the public key into the root of the repo
-          cp main-source/maruska.asc ./apt-data/
-          # echo "Debian repository" > ./apt-data/index.html
-          # name: Generate apt index pages
-          python3 ./main-source/gen-index.py ./apt-data/
-          # prevent GH from processing the files:
-          touch ./apt-data/.nojekyll
+          mkdir site
+          cp -a apt-data/dists apt-data/pool site/
+          cp main-source/maruska.asc site/ 2>/dev/null || true
+          python3 ./main-source/gen-index.py ./site/
+          touch ./site/.nojekyll
 
-          # CRITICAL: Remove the db folder so it isn't included in the Artifact
-          # This only removes it from the local runner disk, not the git history
-          rm -rf ./apt-data/db
-
-      # 3. Upload exactly what is left in apt-data
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v5
         with:
           # should ignore .git !
-          path: './apt-data' # Now contains dists, pool, public.key, and .nojekyll
+          path: './site' # Now contains dists, pool, public.key, and .nojekyll
 
 
   deploy: # This is your deployment job name
