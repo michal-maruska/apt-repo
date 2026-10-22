@@ -102,6 +102,11 @@ jobs:
         run: |
           reprepro --delete clearvanished
           reprepro list sid | sort -t: -k 2
+          reprepro dumpunreferenced     # empty => not in reprepro's db either
+
+      - name: Sweep orphaned pool files
+        run:  cd ./apt-data; ../main-source/sweep-orphans ${{ inputs.apply && '--apply' || '' }}
+
 
       - name: Remove dbgsym
         if: ${{ inputs.dbgsym }}

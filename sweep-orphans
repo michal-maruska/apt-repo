@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# Usage: sweep-orphans.sh [--apply]
+# Needs REPREPRO_BASE_DIR (and REPREPRO_CONFIG_DIR) in the environment.
+set -euo pipefail
+
+apply=false
+[ "${1:-}" = "--apply" ] && apply=true
+
+: "${REPREPRO_BASE_DIR:?set REPREPRO_BASE_DIR}"
+
+work=$(mktemp -d -p "${RUNNER_TEMP:-${TMPDIR:-/tmp}}" apt-sweep.XXXXXX)
+trap 'rm -rf "$work"' EXIT
+
+# Drop what reprepro itself knows is unreferenced, then refresh the indexes.
+reprepro deleteunreferenced
+reprepro export
+
+
+cd "$REPREPRO_BASE_DIR"
+
+zcat dists/*/*/binary-*/Packages.gz \
+  | sed -n 's/^Filename: //p' | sort -u > "$work/referenced"
+
+find pool -type f | sort > "$work/ondisk"
+
+# Guard: an empty index list would make every file look like an orphan.
+[ -s "$work/referenced" ] || { echo "no referenced files found, aborting" >&2; exit 1; }
+
+comm -13 "$work/referenced" "$work/ondisk" > "$work/orphans"
+
+echo "referenced: $(wc -l < "$work/referenced")  on disk: $(wc -l < "$work/ondisk")"
+echo "orphans: $(wc -l < "$work/orphans")"
+cat "$work/orphans"
+
+if $apply; then
+  xargs -r -d '\n' rm -v -- < "$work/orphans"
+  find pool -type d -empty -delete
+else
+  echo "(dry run, pass --apply to delete)"
+fi
