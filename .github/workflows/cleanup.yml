@@ -73,18 +73,22 @@ jobs:
           restore-keys: |
                  reprepro-
 
+      - name: Debug cache
+        run: echo "matched=[${{ steps.cache.outputs.cache-matched-key }}]"
+
       - name: Restore from release if cache missed
         if: steps.cache.outputs.cache-matched-key == '' && !inputs.bootstrap
         # if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download "$RELEASE_TAG" \
             --pattern reprepro-state.tar.gz \
-            --repo $REPO || true
+            --repo $REPO
+          rm -rf apt-data
           if [ -f reprepro-state.tar.gz ]; then
             tar xzf reprepro-state.tar.gz
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sanitize Reprepro
         run: |
@@ -180,10 +184,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save cache
+        if: ${{ inputs.apply }}      # in the cleanup workflow; a dry run saves nothing
         uses: actions/cache/save@v5
         with:
           path: |
             apt-data/pool
             apt-data/dists
             apt-data/db
-            key: reprepro-${{ github.run_id }}
+          key: reprepro-${{ github.run_id }}
