@@ -76,19 +76,24 @@ jobs:
       - name: Debug cache
         run: echo "matched=[${{ steps.cache.outputs.cache-matched-key }}]"
 
+      - name: Inspect restored state
+        run: |
+          du -sh apt-data/* 2>/dev/null || echo "apt-data is empty/missing"
+          ls -A apt-data/db 2>/dev/null | head
+
       - name: Restore from release if cache missed
-        if: steps.cache.outputs.cache-matched-key == '' && !inputs.bootstrap
-        # if: steps.cache.outputs.cache-hit != 'true' && !inputs.bootstrap
+        # neither steps.cache.outputs.cache-matched-key nor steps.cache.outputs.cache-hit helps::
+        if: ${{ !inputs.bootstrap }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download "$RELEASE_TAG" \
-            --pattern reprepro-state.tar.gz \
-            --repo $REPO
-          rm -rf apt-data
-          if [ -f reprepro-state.tar.gz ]; then
-            tar xzf reprepro-state.tar.gz
+          if [ -n "$(ls -A apt-data/db 2>/dev/null)" ]; then
+            echo "state present from cache, skipping release fallback"
+            exit 0
           fi
+          gh release download "$RELEASE_TAG" --pattern reprepro-state.tar.gz --repo "$REPO"
+          rm -rf apt-data
+          tar xzf reprepro-state.tar.gz
 
       - name: Sanitize Reprepro
         run: |
