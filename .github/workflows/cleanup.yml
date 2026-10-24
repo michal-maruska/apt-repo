@@ -60,40 +60,11 @@ jobs:
         with:
           path: main-source
 
-      - name: Restore cache
-        id: cache
-        if: ${{ !inputs.bootstrap }}
-        uses: actions/cache@v5
+      - uses: michal-maruska/workflows/actions/restore-state@main
         with:
-          path: |
-            apt-data/pool
-            apt-data/dists
-            apt-data/db
-          key: reprepro-${{ github.run_id }}
-          restore-keys: |
-                 reprepro-
-
-      - name: Debug cache
-        run: echo "matched=[${{ steps.cache.outputs.cache-matched-key }}]"
-
-      - name: Inspect restored state
-        run: |
-          du -sh apt-data/* 2>/dev/null || echo "apt-data is empty/missing"
-          ls -A apt-data/db 2>/dev/null | head
-
-      - name: Restore from release if cache missed
-        # neither steps.cache.outputs.cache-matched-key nor steps.cache.outputs.cache-hit helps::
-        if: ${{ !inputs.bootstrap }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ -n "$(ls -A apt-data/db 2>/dev/null)" ]; then
-            echo "state present from cache, skipping release fallback"
-            exit 0
-          fi
-          gh release download "$RELEASE_TAG" --pattern reprepro-state.tar.gz --repo "$REPO"
-          rm -rf apt-data
-          tar xzf reprepro-state.tar.gz
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bootstrap: ${{ inputs.bootstrap }}
 
       - name: Sanitize Reprepro
         run: |
@@ -165,35 +136,8 @@ jobs:
 
       # if apply: save state back to cache/release, then republish Pages
 
-      - name: Save to release
-        if: ${{ inputs.apply }}
-        run: |
-          tar czf reprepro-state.tar.gz apt-data/{pool,dists,db}
-
-          # create the release only if it doesn't already exist
-          # todo: reprepro-state should be a variable.
-          gh release view reprepro-state --repo "$REPO" >/dev/null 2>&1 || \
-          gh release create reprepro-state \
-          --title "reprepro state" \
-          --notes "initial" \
-          --prerelease \
-          --repo "$REPO"
-
-          # upload/overwrite the asset in place — no delete, no gap
-          gh release upload "$RELEASE_TAG" reprepro-state.tar.gz \
-          --clobber \
-          --repo $REPO
-
-          gh release edit "$RELEASE_TAG" --notes "Run ${{ github.run_id }}" --repo "$REPO"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Save cache
-        if: ${{ inputs.apply }}      # in the cleanup workflow; a dry run saves nothing
-        uses: actions/cache/save@v5
+      - uses: michal-maruska/workflows/actions/save-state@main
+        if: ${{ inputs.apply }}  # cleanup; the import saves unconditionally
         with:
-          path: |
-            apt-data/pool
-            apt-data/dists
-            apt-data/db
-          key: reprepro-${{ github.run_id }}
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
