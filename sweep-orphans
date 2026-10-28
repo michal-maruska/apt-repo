@@ -13,9 +13,12 @@ work=$(mktemp -d -p "${RUNNER_TEMP:-${TMPDIR:-/tmp}}" apt-sweep.XXXXXX)
 trap 'rm -rf "$work"' EXIT
 
 # Drop what reprepro itself knows is unreferenced, then refresh the indexes.
-reprepro deleteunreferenced
-reprepro export
-
+if $apply; then
+    reprepro deleteunreferenced
+else
+    echo "unreferenced according to the reprepro db:"
+    reprepro dumpunreferenced
+fi
 
 cd "$REPREPRO_BASE_DIR"
 
