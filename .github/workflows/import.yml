@@ -134,11 +134,9 @@ jobs:
           fi
 
       - uses: michal-maruska/workflows/actions/save-state@main
-        if: ${{ inputs.apply }}  # cleanup; the import saves unconditionally
         with:
           repo: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
 
       - name: Stage site
         run: |
