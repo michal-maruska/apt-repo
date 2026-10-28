@@ -19,8 +19,10 @@ reprepro export
 
 cd "$REPREPRO_BASE_DIR"
 
-zcat dists/*/*/binary-*/Packages.gz \
-  | sed -n 's/^Filename: //p' | sort -u > "$work/referenced"
+#
+find dists -name Packages.gz -print0 | xargs -0 -r zcat | sed -n 's/^Filename: //p' | sort -u  > "$work/referenced"
+reprepro checkpool fast
+
 
 find pool -type f | sort > "$work/ondisk"
 
