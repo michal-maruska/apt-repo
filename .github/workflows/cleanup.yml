@@ -19,7 +19,7 @@ on:
         default: false
 
 concurrency:
-  group: apt-repo          # use the same group in the import/publish workflow
+  group: apt-repository
   cancel-in-progress: false
 
 env:
